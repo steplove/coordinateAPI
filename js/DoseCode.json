@@ -1,0 +1,367 @@
+[
+    {
+        "Code": "1ACD",
+        "EngItemName": "once daily before dinner",
+        "ThItemName": "วันละ 1 ครั้ง ก่อนอาหารเย็น"
+    },
+    {
+        "Code": "1ACP",
+        "EngItemName": "once daily after dinner",
+        "ThItemName": "วันละ 1 ครั้ง หลังอาหารเย็น"
+    },
+    {
+        "Code": "1HS",
+        "EngItemName": "once daily at bedtime",
+        "ThItemName": "วันละ 1 ครั้ง ก่อนนอน"
+    },
+    {
+        "Code": "1OD",
+        "EngItemName": "once daily",
+        "ThItemName": "วันละ 1 ครั้ง"
+    },
+    {
+        "Code": "1ODA",
+        "EngItemName": "once daily before breakfast",
+        "ThItemName": "วันละ 1 ครั้ง ก่อนอาหารเช้า"
+    },
+    {
+        "Code": "1ODE",
+        "EngItemName": "once daily in the evening",
+        "ThItemName": "วันละ 1 ครั้ง ตอนเย็น"
+    },
+    {
+        "Code": "1ODL",
+        "EngItemName": "once daily at lunch",
+        "ThItemName": "วันละ 1 ครั้ง ตอนเที่ยง"
+    },
+    {
+        "Code": "1ODM",
+        "EngItemName": "once daily in the morning",
+        "ThItemName": "วันละ 1 ครั้ง ตอนเช้า"
+    },
+    {
+        "Code": "1ODP",
+        "EngItemName": "once daily after breakfast",
+        "ThItemName": "วันละ 1 ครั้ง หลังอาหารเช้า"
+    },
+    {
+        "Code": "1WITH",
+        "EngItemName": "take with food",
+        "ThItemName": "วันละ 1 ครั้ง พร้อมอาหารเย็น"
+    },
+    {
+        "Code": "2AC",
+        "EngItemName": "2 times, before breakfast and dinner",
+        "ThItemName": "วันละ 2 ครั้ง ก่อนอาหาร เช้า เย็น"
+    },
+    {
+        "Code": "2ACH",
+        "EngItemName": "2 times, before breakfast and bedtime",
+        "ThItemName": "วันละ 2 ครั้ง ก่อนอาหารเช้า และก่อนนอน"
+    },
+    {
+        "Code": "2ACN",
+        "EngItemName": "2 times, before breakfast and lunch",
+        "ThItemName": "วันละ 2 ครั้ง ก่อนอาหารเช้า กลางวัน"
+    },
+    {
+        "Code": "2BT",
+        "EngItemName": "2 times, between meal, breakfast and dinner",
+        "ThItemName": "วันละ 2 ครั้ง ระหว่างมื้ออาหาร เช้า เย็น"
+    },
+    {
+        "Code": "2PC",
+        "EngItemName": "2 times, after breakfast and dinner",
+        "ThItemName": "วันละ 2 ครั้ง หลังอาหาร เช้า เย็น"
+    },
+    {
+        "Code": "2PC1",
+        "EngItemName": "2 tablets, after breakfast and 1 tablet after dinner",
+        "ThItemName": "2 เม็ดหลังอาหารเช้า 1 เม็ดหลังอาหารเย็น"
+    },
+    {
+        "Code": "2PCH",
+        "EngItemName": "2 times, after breakfast and bedtime",
+        "ThItemName": "วันละ 2 ครั้ง หลังอาหารเช้า และก่อนนอน"
+    },
+    {
+        "Code": "2PCN",
+        "EngItemName": "2 times, after breakfast and lunch",
+        "ThItemName": "วันละ 2 ครั้ง หลังอาหารเช้า กลางวัน"
+    },
+    {
+        "Code": "2PDH",
+        "EngItemName": "2 times, after dinner and bedtime",
+        "ThItemName": "รับประทาน 2 ครั้ง หลังอาหารเย็น และก่อนนอน"
+    },
+    {
+        "Code": "2PLH",
+        "EngItemName": "2 times, after lunch and bedtime",
+        "ThItemName": "หลังอาหารกลางวันและก่อนนอน"
+    },
+    {
+        "Code": "2T",
+        "EngItemName": "2 times per day, morning and evening",
+        "ThItemName": "วันละ 2 ครั้ง เช้า เย็น"
+    },
+    {
+        "Code": "2TMD",
+        "EngItemName": "2 times, morning and bedtime",
+        "ThItemName": "เช้า และ ก่อนนอน"
+    },
+    {
+        "Code": "2TMN",
+        "EngItemName": "2 times per day, morning and noon",
+        "ThItemName": "วันละ 2 ครั้ง เช้า กลางวัน"
+    },
+    {
+        "Code": "3AC",
+        "EngItemName": "3 times, before breakfast lunch and dinner",
+        "ThItemName": "วันละ 3 ครั้ง ก่อนอาหาร เช้า กลางวัน เย็น"
+    },
+    {
+        "Code": "3ACE",
+        "EngItemName": "3 times, before breakfast dinner and bedtime",
+        "ThItemName": "วันละ 3 ครั้ง ก่อนอาหาร เช้า เย็น ก่อนนอน"
+    },
+    {
+        "Code": "3BT",
+        "EngItemName": "3 times, between meals, breakfast dinner and bedtime",
+        "ThItemName": "วันละ 3 ครั้ง ระหว่างมื้ออาหาร เช้า เย็น ก่อนนอน"
+    },
+    {
+        "Code": "3MAB",
+        "EngItemName": "3 time, after meal, morning noon and bedtime",
+        "ThItemName": "3 เวลาหลังอาหาร เช้า เที่ยง และก่อนนอน"
+    },
+    {
+        "Code": "3PC",
+        "EngItemName": "3 times, after breakfast lunch and dinner",
+        "ThItemName": "วันละ 3 ครั้ง หลังอาหาร เช้า กลางวัน เย็น"
+    },
+    {
+        "Code": "3PCE",
+        "EngItemName": "3 times, after breakfast dinner and bedtime",
+        "ThItemName": "วันละ 3 ครั้ง หลังอาหาร เช้า เย็น ก่อนนอน"
+    },
+    {
+        "Code": "3PLH",
+        "EngItemName": "3 times, after lunch dinner and bedtime",
+        "ThItemName": "วันละ 3 ครั้ง หลังอาหารกลางวัน เย็น และก่อนนอน"
+    },
+    {
+        "Code": "3T",
+        "EngItemName": "3 times per day, morning noon and evening",
+        "ThItemName": "วันละ 3 ครั้ง เช้า กลางวัน เย็น"
+    },
+    {
+        "Code": "4AC",
+        "EngItemName": "4 times, before breakfast lunch dinner and bedtime",
+        "ThItemName": "วันละ 4 ครั้ง ก่อนอาหาร เช้า กลางวัน เย็น ก่อนนอน"
+    },
+    {
+        "Code": "4PC",
+        "EngItemName": "4 times, after breakfast lunch dinner and bedtime",
+        "ThItemName": "วันละ 4 ครั้ง หลังอาหาร เช้า กลางวัน เย็น ก่อนนอน"
+    },
+    {
+        "Code": "4T",
+        "EngItemName": "4 times, morning noon evening and bedtime",
+        "ThItemName": "วันละ 4 ครั้ง เช้า กลางวัน เย็น ก่อนนอน"
+    },
+    {
+        "Code": "5Q4V1",
+        "EngItemName": "5 times per day, every 4 hours",
+        "ThItemName": "วันละ 5 ครั้ง ทุกๆ 4 ชม. เว้นขณะนอนหลับ"
+    },
+    {
+        "Code": "5Q4V2",
+        "EngItemName": "5 times per day, 6pm,10am,2pm,6pm,10pm",
+        "ThItemName": "วันละ 5 ครั้ง เวลา 6.00, 10.00, 14.00, 18.00, 22.00 น."
+    },
+    {
+        "Code": "5Q4V3",
+        "EngItemName": "5 times per day, 8am,noon,4pm,8pm,midnight",
+        "ThItemName": "วันละ 5 ครั้ง เวลา 8.00, 12.00, 16.00, 20.00, 24.00 น."
+    },
+    {
+        "Code": "BBZ",
+        "EngItemName": "Apply and leave on for 24 hr, then wash",
+        "ThItemName": "ทาทิ้งไว้ 24 ชม. แล้วอาบน้ำหรือล้างออก ทำซ้ำเช่นเดิมในวันถัดไป"
+    },
+    {
+        "Code": "CAFER",
+        "EngItemName": "repeat every 1/2 hr",
+        "ThItemName": "ทานซ้ำได้ทุก ครึ่งชั่วโมงถ้าไม่หายปวดศีรษะ"
+    },
+    {
+        "Code": "EOD",
+        "EngItemName": "each orther day",
+        "ThItemName": "วันเว้นวัน"
+    },
+    {
+        "Code": "FLUC",
+        "EngItemName": "after breakfast once weekly",
+        "ThItemName": "หลังอาหารเช้า สัปดาห์ละ 1 ครั้ง"
+    },
+    {
+        "Code": "FOSA",
+        "EngItemName": "BEFORE BREAKFAST PER WEEK",
+        "ThItemName": "ก่อนอาหารเช้า สัปดาห์ละ 1 ครั้ง"
+    },
+    {
+        "Code": "HR",
+        "EngItemName": "/hr",
+        "ThItemName": "/hr."
+    },
+    {
+        "Code": "INSU2",
+        "EngItemName": "before meal morning...........unit, dinner..........unit",
+        "ThItemName": "ก่อนอาหาร เช้า......ยูนิต, เย็น......ยูนิต"
+    },
+    {
+        "Code": "ISORD",
+        "EngItemName": "for chest pain",
+        "ThItemName": "เวลามีอาการเจ็บแน่นหน้าอก"
+    },
+    {
+        "Code": "OR",
+        "EngItemName": "before OR.",
+        "ThItemName": "ก่อนส่ง OR"
+    },
+    {
+        "Code": "PRN",
+        "EngItemName": "prn",
+        "ThItemName": "เมื่อมีอาการ"
+    },
+    {
+        "Code": "PRN12",
+        "EngItemName": "prn q 12 hrs.",
+        "ThItemName": "เมื่อมีอาการทุก 12 ชั่วโมง"
+    },
+    {
+        "Code": "PRNQ4",
+        "EngItemName": "prn q 4 hrs.",
+        "ThItemName": "เมื่อมีอาการทุก 4 ชั่วโมง"
+    },
+    {
+        "Code": "PRNQ6",
+        "EngItemName": "prn q 6 hrs.",
+        "ThItemName": "เมื่อมีอาการทุก 6 ชั่วโมง"
+    },
+    {
+        "Code": "PRNQ8",
+        "EngItemName": "prn q 8 hrs.",
+        "ThItemName": "เมื่อมีอาการทุก 8 ชั่วโมง"
+    },
+    {
+        "Code": "Q1",
+        "EngItemName": "every 1 hrs.",
+        "ThItemName": "ทุก 1 ชั่วโมง"
+    },
+    {
+        "Code": "Q12",
+        "EngItemName": "every 12 hrs.",
+        "ThItemName": "ทุก 12 ชั่วโมง"
+    },
+    {
+        "Code": "Q1-2",
+        "EngItemName": "every 1-2 hrs.",
+        "ThItemName": "ทุก 1-2 ชั่วโมง"
+    },
+    {
+        "Code": "Q12F",
+        "EngItemName": "take 4 Tab. every 12 hr. Day 2-5",
+        "ThItemName": "ทาน 4 เม็ด ทุก 12 ชม. วันที่ 2-5"
+    },
+    {
+        "Code": "Q12FP",
+        "EngItemName": "take.....Tab. every 12 hr. Day 2-5",
+        "ThItemName": "ทาน......เม็ด ทุก 12 ชม. วันที่ 2-5"
+    },
+    {
+        "Code": "Q12FS",
+        "EngItemName": "Take ml. every 12 hr. Day 2-5",
+        "ThItemName": "ทาน  มล. ทุก 12 ชม. วันที่ 2-5"
+    },
+    {
+        "Code": "Q12V1",
+        "EngItemName": "every 12 hrs. (7am, 7pm)",
+        "ThItemName": "ทุก 12 ชั่วโมง (เวลา 7.00 น. และ 19.00 น.)"
+    },
+    {
+        "Code": "Q12V2",
+        "EngItemName": "every 12 hrs. (8am, 8pm)",
+        "ThItemName": "ทุก 12 ชั่วโมง (เวลา 8.00 น. และ 20.00 น.)"
+    },
+    {
+        "Code": "Q2",
+        "EngItemName": "every 2 hrs.",
+        "ThItemName": "ทุก 2 ชั่วโมง"
+    },
+    {
+        "Code": "Q3",
+        "EngItemName": "every 3 hrs.",
+        "ThItemName": "ทุก 3 ชั่วโมง"
+    },
+    {
+        "Code": "Q4",
+        "EngItemName": "every 4 hrs.",
+        "ThItemName": "ทุก 4 ชั่วโมง"
+    },
+    {
+        "Code": "Q4-6",
+        "EngItemName": "every 4-6 hrs.",
+        "ThItemName": "ทุก 4-6 ชั่วโมง"
+    },
+    {
+        "Code": "Q48",
+        "EngItemName": "every 48 hrs.",
+        "ThItemName": "ทุก 48 ชั่วโมง"
+    },
+    {
+        "Code": "Q6",
+        "EngItemName": "every 6 hrs.",
+        "ThItemName": "ทุก 6 ชั่วโมง"
+    },
+    {
+        "Code": "Q6-8",
+        "EngItemName": "every 6-8 hrs.",
+        "ThItemName": "ทุก 6-8 ชั่วโมง"
+    },
+    {
+        "Code": "Q72",
+        "EngItemName": "every 72 hrs.",
+        "ThItemName": "ทุก 72 ชั่วโมง"
+    },
+    {
+        "Code": "Q8",
+        "EngItemName": "every 8 hrs.",
+        "ThItemName": "ทุก 8 ชั่วโมง"
+    },
+    {
+        "Code": "STAT",
+        "EngItemName": "stat",
+        "ThItemName": "ทันที"
+    },
+    {
+        "Code": "V",
+        "EngItemName": "Vary",
+        "ThItemName": null
+    },
+    {
+        "Code": "VP",
+        "EngItemName": "Vary",
+        "ThItemName": "."
+    },
+    {
+        "Code": "W1",
+        "EngItemName": "once a week",
+        "ThItemName": "1 ครั้งต่อสัปดาห์"
+    },
+    {
+        "Code": "W3",
+        "EngItemName": "3 time per week",
+        "ThItemName": "3 ครั้งต่อสัปดาห์"
+    }
+]

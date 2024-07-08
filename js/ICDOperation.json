@@ -1,0 +1,126 @@
+[
+    {
+        "ICDCmCode1": "3995",
+        "ICD_Name": "Hemodialysis"
+    },
+    {
+        "ICDCmCode1": "8876",
+        "ICD_Name": "Diagnostic ultrasound of abdomen and retroperitoneum"
+    },
+    {
+        "ICDCmCode1": "8659",
+        "ICD_Name": "Suture of skin and subcutaneous tissue of other sites"
+    },
+    {
+        "ICDCmCode1": "8703",
+        "ICD_Name": "Computerized axial tomograhy of head"
+    },
+    {
+        "ICDCmCode1": "8872",
+        "ICD_Name": "Diagnostic ultrasound of heart"
+    },
+    {
+        "ICDCmCode1": "9654",
+        "ICD_Name": "Dental scaling, polishing, and debridement"
+    },
+    {
+        "ICDCmCode1": "8801",
+        "ICD_Name": "Computerized axial tomography of abdomen"
+    },
+    {
+        "ICDCmCode1": "9904",
+        "ICD_Name": "Transfusion of packed cells"
+    },
+    {
+        "ICDCmCode1": "9357",
+        "ICD_Name": "Application of other wound dressing"
+    },
+    {
+        "ICDCmCode1": "863",
+        "ICD_Name": "Other local excision or destruction of lesion or tissue of skin and subcutaneous tisse"
+    },
+    {
+        "ICDCmCode1": "8893",
+        "ICD_Name": "MMagnetic resonance imaging of spinal canal,spinal cord,spine"
+    },
+    {
+        "ICDCmCode1": "8737",
+        "ICD_Name": "Other mammography"
+    },
+    {
+        "ICDCmCode1": "232",
+        "ICD_Name": "Restoration of tooth by filling"
+    },
+    {
+        "ICDCmCode1": "2309",
+        "ICD_Name": "Extraction of other tooth"
+    },
+    {
+        "ICDCmCode1": "8628",
+        "ICD_Name": "Nonexcisional debridment of wound,infection,or burn"
+    },
+    {
+        "ICDCmCode1": "8897",
+        "ICD_Name": "Magnetic resonance imaging of other and unspecified sites"
+    },
+    {
+        "ICDCmCode1": "8952",
+        "ICD_Name": "Electrocardiogram"
+    },
+    {
+        "ICDCmCode1": "8741",
+        "ICD_Name": "Computerized axial tomography of thorax"
+    },
+    {
+        "ICDCmCode1": "8873",
+        "ICD_Name": "Diagnostic ultrasound of other sites of thorax"
+    },
+    {
+        "ICDCmCode1": "8891",
+        "ICD_Name": "Magnetic resoneance imaging of brain and brain stem"
+    },
+    {
+        "ICDCmCode1": "8894",
+        "ICD_Name": "MMagnetic resonance imaging of musculoskeletal"
+    },
+    {
+        "ICDCmCode1": "0870",
+        "ICD_Name": "Reconstruction of eyelid, not otherwise specified"
+    },
+    {
+        "ICDCmCode1": "4823",
+        "ICD_Name": "Other proctosigmoidoscopy"
+    },
+    {
+        "ICDCmCode1": "8604",
+        "ICD_Name": "Other incision with drainage of skin and subcutaneous tissue"
+    },
+    {
+        "ICDCmCode1": "4516",
+        "ICD_Name": "Esophagogastroduodenoscopy [EGD] with closed biopsy"
+    },
+    {
+        "ICDCmCode1": "9851",
+        "ICD_Name": "ESWL of the kidney,ureterand/or bladder"
+    },
+    {
+        "ICDCmCode1": "8623",
+        "ICD_Name": "Removal of nail, nailbed, or nail fold"
+    },
+    {
+        "ICDCmCode1": "8744",
+        "ICD_Name": "Routine chest x-ray, so described"
+    },
+    {
+        "ICDCmCode1": "8871",
+        "ICD_Name": "Diagnostic ultrasound of head and neck"
+    },
+    {
+        "ICDCmCode1": "2185",
+        "ICD_Name": "Augmentation rhinoplasty"
+    },
+    {
+        "ICDCmCode1": "8611",
+        "ICD_Name": "Biopsy of skin and subcutaneous tissue"
+    }
+]
