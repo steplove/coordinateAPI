@@ -68,10 +68,14 @@ app.get("/api/ICDOperation/search", (req, res) => {
   try {
     const data = fs.readFileSync(networkFilePath, "utf-8");
     const jsonData = JSON.parse(data);
+
+    const lowerCaseQuery = query.toLowerCase();
+
     const filteredData = jsonData.filter(
       (item) =>
-        (item.ICDCmCode1 && item.ICDCmCode1.includes(query)) ||
-        (item.ICD_Name && item.ICD_Name.includes(query))
+        (item.ICDCmCode1 &&
+          item.ICDCmCode1.toLowerCase().includes(lowerCaseQuery)) ||
+        (item.ICD_Name && item.ICD_Name.toLowerCase().includes(lowerCaseQuery))
     );
     res.json(filteredData);
   } catch (error) {
@@ -86,10 +90,12 @@ app.get("/api/medication/search", (req, res) => {
     const data = fs.readFileSync(networkFilePath, "utf-8");
     const jsonData = JSON.parse(data);
 
+    const lowerCaseQuery = query.toLowerCase();
+
     const filteredData = jsonData.filter(
       (item) =>
-        (item.TMTCode && item.TMTCode.includes(query)) ||
-        (item.ItemName && item.ItemName.includes(query))
+        (item.TMTCode && item.TMTCode.toLowerCase().includes(lowerCaseQuery)) ||
+        (item.ItemName && item.ItemName.toLowerCase().includes(lowerCaseQuery))
     );
 
     res.json(filteredData);
@@ -106,10 +112,13 @@ app.get("/api/dose/search", (req, res) => {
     const data = fs.readFileSync(networkFilePath, "utf-8");
     const jsonData = JSON.parse(data);
 
+    const lowerCaseQuery = query.toLowerCase();
+
     const filteredData = jsonData.filter(
       (item) =>
-        (item.Code && item.Code.includes(query)) ||
-        (item.ThItemName && item.ThItemName.includes(query))
+        (item.Code && item.Code.toLowerCase().includes(lowerCaseQuery)) ||
+        (item.ThItemName &&
+          item.ThItemName.toLowerCase().includes(lowerCaseQuery))
     );
 
     res.json(filteredData);
