@@ -52,10 +52,12 @@ app.get("/api/ICD/search", (req, res) => {
   try {
     const data = fs.readFileSync(networkFilePath, "utf-8");
     const jsonData = JSON.parse(data);
+    const lowerCaseQuery = query.toLowerCase();
+
     const filteredData = jsonData.filter(
       (item) =>
-        (item.ICDCode && item.ICDCode.includes(query)) ||
-        (item.ICD_Name && item.ICD_Name.includes(query))
+        (item.ICDCode && item.ICDCode.toLowerCase().includes(lowerCaseQuery)) ||
+        (item.ICD_Name && item.ICD_Name.toLowerCase().includes(lowerCaseQuery))
     );
     res.json(filteredData);
   } catch (error) {
@@ -144,8 +146,13 @@ app.get("/api/Patient/search", (req, res) => {
 });
 app.get("/api/InvNo", async (req, res) => {
   try {
+    const { station } = req.query;
+    if (!station) {
+      return res.status(400).json({ error: "Station is required" });
+    }
+
     let pool = await sql.connect(config);
-    const sqlQuery = "SELECT MAX(InvNo) AS InvNo FROM Bill_Trans";
+    const sqlQuery = `SELECT MAX(InvNo) AS InvNo FROM Bill_Trans WHERE Station = '${station}'`;
 
     pool.request().query(sqlQuery, (err, result) => {
       if (err) {
@@ -159,6 +166,7 @@ app.get("/api/InvNo", async (req, res) => {
     res.status(500).send();
   }
 });
+
 app.post("/api/billTrans", async (req, res) => {
   const {
     Station,
