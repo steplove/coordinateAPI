@@ -184,8 +184,14 @@ app.post("/api/billTrans", async (req, res) => {
   try {
     let pool = await sql.connect(config);
     // คำนวณเวลาใน TimeZone ของไทย
-    const thaiTime = moment.tz("Asia/Bangkok");
-    const EntryDatetime = thaiTime.format("YYYY-MM-DD HH:mm:ss");
+    const now = new Date();
+    now.setHours(now.getHours() + 7);
+    const EntryDatetime = now.toISOString();
+
+    const now1 = new Date(Serv_date);
+    now1.setHours(now1.getHours() + 7);
+    const Serv_date1 = now1.toISOString();
+
     const updateQuery = `
       INSERT INTO Bill_Trans (Station, Serv_date, InvNo, Hcode, HN, IDCardNo, PatientName, Doctor_No, DoctorName, EntryDatetime,EntryByUser)
       VALUES (@Station, @Serv_date, @InvNo, @Hcode, @HN, @IDCardNo, @PatientName, @Doctor_No, @DoctorName, @EntryDatetime,@EntryByUser)
@@ -193,7 +199,7 @@ app.post("/api/billTrans", async (req, res) => {
     const request = pool
       .request()
       .input("Station", sql.VarChar, Station)
-      .input("Serv_date", sql.DateTime, Serv_date)
+      .input("Serv_date", sql.DateTime, Serv_date1)
       .input("InvNo", sql.VarChar, InvNo)
       .input("Hcode", sql.VarChar, Hcode)
       .input("HN", sql.VarChar, HN)
@@ -201,7 +207,7 @@ app.post("/api/billTrans", async (req, res) => {
       .input("PatientName", sql.NVarChar, Name)
       .input("Doctor_No", sql.VarChar, Doctor_No)
       .input("DoctorName", sql.NVarChar, DoctorName)
-      .input("EntryDatetime", sql.VarChar, EntryDatetime)
+      .input("EntryDatetime", sql.DateTime, EntryDatetime)
       .input("EntryByUser", sql.NVarChar, EntryByUser);
     await request.query(updateQuery);
 
@@ -214,34 +220,63 @@ app.post("/api/billTrans", async (req, res) => {
 
 app.post("/api/medications", async (req, res) => {
   const medications = req.body.medications;
-
+  console.log(medications);
   try {
     let pool = await sql.connect(config);
 
-    const sqlQuery = `
-      INSERT INTO Bill_Items (
-        InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont,ItemType
-      ) VALUES (
-        @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont,@ItemType
-      )
-    `;
-
     for (const med of medications) {
-      await pool
-        .request()
-        .input("InvNo", sql.VarChar, med.InvNo)
-        .input("Suffix", sql.TinyInt, med.Suffix)
-        .input("Sv_date", sql.DateTime, med.Sv_date)
-        .input("ItemCode", sql.VarChar, med.ItemCode)
-        .input("ItemName", sql.NVarChar, med.ItemName)
-        .input("TMTCode", sql.VarChar, med.TMTCode)
-        .input("DoseCode", sql.VarChar, med.DoseCode)
-        .input("Qty", sql.Float, med.quantity)
-        .input("UnitPrice", sql.Float, med.unitPrice)
-        .input("TotalAmont", sql.Float, med.totalPrice)
-        .input("ItemType", sql.VarChar, med.StockComposeCategory
-        )
-        .query(sqlQuery);
+      const now1 = new Date(med.Sv_date);
+      now1.setHours(now1.getHours() + 6);
+      const Serv_date1 = now1.toISOString();
+      let code = "";
+      if (
+        med.ItemName === "ค่าบริการทางการแพทย์" ||
+        med.ItemName === "ค่าธรรมเนียมบุคลาการทางการแพทย์"
+      ) {
+        if (med.ItemName === "ค่าบริการทางการแพทย์") {
+          code = "N-737-1-03";
+        } else if (med.ItemName === "ค่าธรรมเนียมบุคลาการทางการแพทย์") {
+          code = "S-204-3-025";
+        }
+        const sqlQueryServiceFee = `
+          INSERT INTO Bill_Items (
+            InvNo, Suffix,TotalAmont ,Sv_date , ItemCode, ItemName
+          ) VALUES (
+            @InvNo, @Suffix,@TotalAmont, @Sv_date, @ItemCode, @ItemName
+          )
+        `;
+        await pool
+          .request()
+          .input("InvNo", sql.VarChar, med.InvNo)
+          .input("Suffix", sql.TinyInt, med.Suffix)
+          .input("TotalAmont", sql.Float, med.ItemCode)
+          .input("Sv_date", sql.DateTime, Serv_date1)
+          .input("ItemCode", sql.VarChar, code)
+          .input("ItemName", sql.NVarChar, med.ItemName)
+          .query(sqlQueryServiceFee);
+      } else {
+        const sqlQuery = `
+          INSERT INTO Bill_Items (
+            InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont, ItemType
+          ) VALUES (
+            @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont, @ItemType
+          )
+        `;
+        await pool
+          .request()
+          .input("InvNo", sql.VarChar, med.InvNo)
+          .input("Suffix", sql.TinyInt, med.Suffix)
+          .input("Sv_date", sql.DateTime, Serv_date1)
+          .input("ItemCode", sql.VarChar, med.ItemCode)
+          .input("ItemName", sql.NVarChar, med.ItemName)
+          .input("TMTCode", sql.VarChar, med.TMTCode || null)
+          .input("DoseCode", sql.VarChar, med.DoseCode || null)
+          .input("Qty", sql.Float, med.quantity || 0)
+          .input("UnitPrice", sql.Float, med.unitPrice || 0)
+          .input("TotalAmont", sql.Float, med.totalPrice || 0)
+          .input("ItemType", sql.VarChar, med.StockComposeCategory || null)
+          .query(sqlQuery);
+      }
     }
 
     console.log(medications);
@@ -288,6 +323,7 @@ app.post("/api/diagnosis", async (req, res) => {
     sql.close();
   }
 });
+
 app.get("/api/BillTransXML", async (req, res) => {
   const { P_FromDate, P_ToDate, P_TFlag } = req.query;
 
