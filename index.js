@@ -240,9 +240,9 @@ app.post("/api/medications", async (req, res) => {
         }
         const sqlQueryServiceFee = `
           INSERT INTO Bill_Items (
-            InvNo, Suffix,TotalAmont ,Sv_date , ItemCode, ItemName
+            InvNo, Suffix,TotalAmont ,Sv_date , ItemCode, ItemName, Qty, UnitPrice
           ) VALUES (
-            @InvNo, @Suffix,@TotalAmont, @Sv_date, @ItemCode, @ItemName
+            @InvNo, @Suffix,@TotalAmont, @Sv_date, @ItemCode, @ItemName ,@Qty, @UnitPrice
           )
         `;
         await pool
@@ -253,6 +253,8 @@ app.post("/api/medications", async (req, res) => {
           .input("Sv_date", sql.DateTime, Serv_date1)
           .input("ItemCode", sql.VarChar, code)
           .input("ItemName", sql.NVarChar, med.ItemName)
+          .input("Qty", sql.Float, 1)
+          .input("UnitPrice", sql.Float, med.ItemCode)
           .query(sqlQueryServiceFee);
       } else {
         const sqlQuery = `
