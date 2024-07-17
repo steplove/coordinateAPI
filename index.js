@@ -193,7 +193,7 @@ app.post("/api/billTrans", async (req, res) => {
     const request = pool
       .request()
       .input("Station", sql.VarChar, Station)
-      .input("Serv_date", sql.VarChar, Serv_date)
+      .input("Serv_date", sql.DateTime, Serv_date)
       .input("InvNo", sql.VarChar, InvNo)
       .input("Hcode", sql.VarChar, Hcode)
       .input("HN", sql.VarChar, HN)
@@ -220,9 +220,9 @@ app.post("/api/medications", async (req, res) => {
 
     const sqlQuery = `
       INSERT INTO Bill_Items (
-        InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont
+        InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont,ItemType
       ) VALUES (
-        @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont
+        @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont,@ItemType
       )
     `;
 
@@ -231,18 +231,20 @@ app.post("/api/medications", async (req, res) => {
         .request()
         .input("InvNo", sql.VarChar, med.InvNo)
         .input("Suffix", sql.TinyInt, med.Suffix)
-        .input("Sv_date", sql.VarChar, med.Sv_date)
+        .input("Sv_date", sql.DateTime, med.Sv_date)
         .input("ItemCode", sql.VarChar, med.ItemCode)
-        .input("ItemName", sql.VarChar, med.ItemName)
+        .input("ItemName", sql.NVarChar, med.ItemName)
         .input("TMTCode", sql.VarChar, med.TMTCode)
         .input("DoseCode", sql.VarChar, med.DoseCode)
         .input("Qty", sql.Float, med.quantity)
         .input("UnitPrice", sql.Float, med.unitPrice)
         .input("TotalAmont", sql.Float, med.totalPrice)
+        .input("ItemType", sql.VarChar, med.StockComposeCategory
+        )
         .query(sqlQuery);
     }
 
-    console.log("Inserted medications successfully");
+    console.log(medications);
     res.json({ message: "Medications data received and saved successfully." });
   } catch (err) {
     console.error("Error inserting medications:", err);
@@ -284,6 +286,98 @@ app.post("/api/diagnosis", async (req, res) => {
     res.status(500).json({ error: "Failed to save diagnosis." });
   } finally {
     sql.close();
+  }
+});
+app.get("/api/BillTransXML", async (req, res) => {
+  const { P_FromDate, P_ToDate, P_TFlag } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`  
+      DECLARE @P_FromDate datetime;
+      SET @P_FromDate=${P_FromDate};
+      DECLARE @P_ToDate datetime;
+      SET @P_ToDate=${P_ToDate};
+      DECLARE @P_TFlag INT;
+      SET @P_TFlag=${P_TFlag};
+
+      SELECT 
+      Station,
+      '' as Authcode,
+      ISNULL(CONVERT(varchar,Serv_Date,126),'')AS DTtran,
+      Hcode,
+      InvNo,
+      '' as BillNo,
+      HN,
+      IDCardNo as MemberNo,
+      CAST(ISNULL((select SUM(BITM.TotalAmont) from Bill_Items BITM WHERE BT.InvNo=BITM.InvNo),0)as money) as Amount,
+      CAST(0 as money) as Paid,
+      '' as VerCode,
+      CASE WHEN @P_TFlag= 0 THEN 'A'
+            WHEN @P_TFlag= 1 THEN 'E'
+        WHEN @P_TFlag= 2 THEN 'D'
+      END AS Tflag,
+      IDCardNo as Pid,
+      PatientName as Name,
+      '12026' as Hmain,
+      '80' as PayPlan,
+      CAST(ISNULL((select SUM(BITM.TotalAmont)from Bill_Items BITM WHERE BT.InvNo=BITM.InvNo),0)as money) as ClaimAmt,
+      '' OtherPayplan,
+      CAST(0 as money) as OtherPay
+      FROM Bill_Trans BT
+      WHERE EntryDatetime BETWEEN @P_FromDate and @P_ToDate`;
+
+    res.status(200).json(result.recordset);
+    console.log(result);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/api/BillItems", async (req, res) => {
+  const { P_FromDate, P_ToDate, P_TFlag = 0 } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        DECLARE @P_FromDate datetime
+        SET @P_FromDate=${P_FromDate};
+        DECLARE @P_ToDate datetime
+        SET @P_ToDate=${P_ToDate};
+        DECLARE @P_TFlag INT
+        SET @P_TFlag=0
+        BEGIN
+        With TMP as (
+        SELECT *
+        FROM Bill_Trans
+        WHERE EntryDatetime BETWEEN @P_FromDate and @P_ToDate
+        )
+        SELECT 
+        BITM.InvNo,
+        BITM.Sv_date,
+        '' as BillMuad,
+        BITM.ItemCode as LCCode,
+        BITM.TMTCode as STDCode,
+        BITM.ItemName as 'Desc',
+        BITM.Qty as QTY,
+        BITM.UnitPrice as UP,
+        BITM.TotalAmont as ChargeAmt,
+        BITM.UnitPrice as ClaimUP,
+        BITM.TotalAmont as CliamAmount,
+        CONCAT(BITM.InvNo,'-',BITM.Suffix) as SvRefID,
+        'OP1' as ClaimCat
+        FROM Bill_Items BITM
+        LEFT JOIN TMP T ON T.InvNo=BITM.InvNo
+        END
+    `;
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
   }
 });
 
