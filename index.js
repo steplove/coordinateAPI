@@ -180,7 +180,7 @@ app.post("/api/billTrans", async (req, res) => {
     DoctorName,
     EntryByUser,
   } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   try {
     let pool = await sql.connect(config);
     // คำนวณเวลาใน TimeZone ของไทย
@@ -220,7 +220,7 @@ app.post("/api/billTrans", async (req, res) => {
 
 app.post("/api/medications", async (req, res) => {
   const medications = req.body.medications;
-  console.log(medications);
+  // console.log(medications);
   try {
     let pool = await sql.connect(config);
 
@@ -386,7 +386,7 @@ app.get("/api/BillItems", async (req, res) => {
         DECLARE @P_ToDate datetime
         SET @P_ToDate=${P_ToDate};
         DECLARE @P_TFlag INT
-        SET @P_TFlag=0
+        SET @P_TFlag=${P_TFlag}
         BEGIN
         With TMP as (
         SELECT *
