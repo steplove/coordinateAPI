@@ -180,7 +180,7 @@ app.post("/api/billTrans", async (req, res) => {
     DoctorName,
     EntryByUser,
   } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
   try {
     let pool = await sql.connect(config);
     // คำนวณเวลาใน TimeZone ของไทย
@@ -259,9 +259,9 @@ app.post("/api/medications", async (req, res) => {
       } else {
         const sqlQuery = `
           INSERT INTO Bill_Items (
-            InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont, ItemType
+            InvNo, Suffix, Sv_date, ItemCode, ItemName, TMTCode, DoseCode, Qty, UnitPrice, TotalAmont, ItemType,UnitCode
           ) VALUES (
-            @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont, @ItemType
+            @InvNo, @Suffix, @Sv_date, @ItemCode, @ItemName, @TMTCode, @DoseCode, @Qty, @UnitPrice, @TotalAmont, @ItemType,@UnitCode
           )
         `;
         await pool
@@ -282,7 +282,7 @@ app.post("/api/medications", async (req, res) => {
       }
     }
 
-    console.log(medications);
+    // console.log(medications);
     res.json({ message: "Medications data received and saved successfully." });
   } catch (err) {
     console.error("Error inserting medications:", err);
@@ -317,7 +317,7 @@ app.post("/api/diagnosis", async (req, res) => {
         .query(sqlQuery);
     }
 
-    console.log("Inserted diagnosis successfully");
+    // console.log("Inserted diagnosis successfully");
     res.json({ message: "Diagnosis data received and saved successfully." });
   } catch (err) {
     console.error("Error inserting diagnosis:", err);
@@ -368,7 +368,7 @@ app.get("/api/BillTransXML", async (req, res) => {
       WHERE EntryDatetime BETWEEN @P_FromDate and @P_ToDate`;
 
     res.status(200).json(result.recordset);
-    console.log(result);
+    // console.log(result);
   } catch (err) {
     console.error("SQL error", err);
     res.status(500).send("Server error");
@@ -420,7 +420,7 @@ app.get("/api/BillItems", async (req, res) => {
   }
 });
 app.get("/api/Dispensing", async (req, res) => {
-  const { P_FromDate, P_ToDate} = req.query;
+  const { P_FromDate, P_ToDate } = req.query;
 
   try {
     await sql.connect(config);
