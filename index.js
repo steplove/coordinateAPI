@@ -277,6 +277,7 @@ app.post("/api/medications", async (req, res) => {
           .input("UnitPrice", sql.Float, med.unitPrice || 0)
           .input("TotalAmont", sql.Float, med.totalPrice || 0)
           .input("ItemType", sql.VarChar, med.StockComposeCategory || null)
+          .input("UnitCode", sql.VarChar, med.UnitCode || null)
           .query(sqlQuery);
       }
     }
@@ -375,7 +376,7 @@ app.get("/api/BillTransXML", async (req, res) => {
 });
 
 app.get("/api/BillItems", async (req, res) => {
-  const { P_FromDate, P_ToDate, P_TFlag = 0 } = req.query;
+  const { P_FromDate, P_ToDate, P_TFlag } = req.query;
 
   try {
     await sql.connect(config);
@@ -410,6 +411,176 @@ app.get("/api/BillItems", async (req, res) => {
         FROM Bill_Items BITM
         LEFT JOIN TMP T ON T.InvNo=BITM.InvNo
         END
+    `;
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
+  }
+});
+app.get("/api/Dispensing", async (req, res) => {
+  const { P_FromDate, P_ToDate} = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        DECLARE @P_FromDate datetime
+        SET @P_FromDate=${P_FromDate};
+        DECLARE @P_ToDate datetime
+        SET @P_ToDate=${P_ToDate};
+        SELECT 
+        BT.Hcode as ProviderID,
+        CONCAT('DRG-',BT.InvNo) as Dispid,
+        BT.InvNo,
+        HN,
+        IDCardNo as PID,
+        DATEADD(MINUTE,5,Serv_Date) as Prescdt,
+        DATEADD(MINUTE,10,Serv_Date) as Dispdt,
+        BT.Doctor_No as Prescb,
+        count(itemcode) as Itemcnt,
+        SUM(BITM.TotalAmont) as ChargeAmt,
+        SUM(BITM.TotalAmont) as ClaimAmt,
+        0 as Paid,
+        0 as OtherPay,
+        'HP' as Reimburser,
+        'SS' as BenefitPlan,
+        '1' as DispeStat,
+        '' as SvID,
+        '' as DayCover
+        FROM Bill_Items BITM
+        LEFT JOIN Bill_Trans BT ON BITM.InvNo=BT.InvNo
+        WHERE BT.EntryDatetime BETWEEN @P_FromDate and @P_ToDate
+        GROUP BY 
+        BT.InvNo,
+        BT.HN,
+        BT.IDCardNo,
+        BT.Serv_Date,
+        BT.Hcode,
+        BT.Doctor_No
+    `;
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
+  }
+});
+app.get("/api/DispensedItems", async (req, res) => {
+  const { P_FromDate, P_ToDate } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        DECLARE @P_FromDate datetime
+        SET @P_FromDate=${P_FromDate};
+        DECLARE @P_ToDate datetime
+        SET @P_ToDate=${P_ToDate};
+        SELECT 
+        CONCAT('DRG-',BT.InvNo) as Dispid,
+        CASE WHEN BITM.ItemType like 'M%' THEN 1
+            WHEN BITM.ItemType like 'S%' THEN 6
+        END PrdCat,
+        BITM.ItemCode as Hospdrgid,
+        BITM.TMTCode as DrgID,
+        ISNULL(BITM.DoseCode,'-') as dfsCode,
+        '' AS dfsText,
+        ISNULL(BITM.UnitCode,'ไม่ระบุ') AS Packsize,
+        ISNULL(BITM.DoseCode,'X') AS sigCode,
+        ''AS sigText,
+        BITM.Qty AS Quantity,
+        CONVERT(decimal(10,2),(BITM.UnitPrice)) AS UnitPrice,
+        CONVERT(decimal(10,2),BITM.TotalAmont) AS ChargeAmt,
+        CONVERT(decimal(10,2),(BITM.UnitPrice)) AS ReimbPrice,
+        CONVERT(decimal(10,2),BITM.TotalAmont) AS ReimbAmt,
+        '' AS PrdSeCode,
+        'OD' AS Claimcont, 
+        'OP1' AS ClaimCat, 
+        '' AS MultiDisp, 
+        '' AS SupplyFor
+        FROM Bill_Items BITM
+        LEFT JOIN Bill_Trans BT ON BITM.InvNo=BT.InvNo
+        WHERE BT.EntryDatetime BETWEEN @P_FromDate and @P_ToDate
+        and BITM.ItemType is not null
+    `;
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
+  }
+});
+app.get("/api/OPServices", async (req, res) => {
+  const { P_FromDate, P_ToDate } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        DECLARE @P_FromDate datetime
+        SET @P_FromDate=${P_FromDate};
+        DECLARE @P_ToDate datetime
+        SET @P_ToDate=${P_ToDate};
+        SELECT
+        BT.InvNo,
+        CONCAT('SV','-',BITM.InvNo,'-',BITM.Suffix) AS SvID,
+        'EC' as Class,
+        BT.Hcode,
+        BT.HN,
+        BT.IDCardNo as Pid,
+        '3' as CareAccount,
+        '06' as TypeServ,
+        '1' as TypeIn,
+        '1' as TypeOut,
+        '' as DTAppoint,
+        BT.Doctor_No as SvPID,
+        '01' as Clinic,
+        BT.Serv_Date as BegDT,
+        DATEADD(MINUTE,30,Serv_Date) as EndDT,
+        BITM.ItemCode as LCCode,
+        'TT' as CodeSet,
+        '' as STDCode,
+        BITM.TotalAmont as SvCharge,
+        'Y' as Completion,
+        '' as SvTxCode,
+        'OP1' as ClaimCat
+        FROM Bill_Items BITM
+        LEFT JOIN Bill_Trans BT ON BITM.InvNo=BT.InvNo
+        WHERE BT.EntryDatetime BETWEEN @P_FromDate and @P_ToDate
+        and BITM.ItemType is null
+    `;
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Server error");
+  }
+});
+app.get("/api/OPDx", async (req, res) => {
+  const { P_FromDate, P_ToDate } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        DECLARE @P_FromDate datetime
+        SET @P_FromDate=${P_FromDate};
+        DECLARE @P_ToDate datetime
+        SET @P_ToDate=${P_ToDate};
+        SELECT 
+        'EC' as Class,
+        CONCAT('SV','-',BITM.InvNo,'-',BITM.Suffix) AS SvID,
+        BDiag.Suffix as SL,
+        'TT' as CodeSet,
+        BDiag.ICDCode as Code,
+        BDiag.ICDName as 'Desc'
+        FROM Bill_Items BITM
+        LEFT JOIN Bill_Trans BT ON BITM.InvNo=BT.InvNo
+        LEFT JOIN Bill_Diag BDiag ON BITM.InvNo=BDiag.InvNo
+        WHERE BT.EntryDatetime BETWEEN @P_FromDate and @P_ToDate
+        and BITM.ItemType is null
     `;
 
     res.status(200).json(result.recordset);
