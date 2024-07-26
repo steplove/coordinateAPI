@@ -9,6 +9,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
 const moment = require("moment-timezone");
+const tokenCheck =
+  "QQA1XCA68FQASFG9F5442X89547GYIG5ASES2X475NJI6FXD280AD448EQ2X2V6ASG4A24HA7Q2W42GA6TW8Q2SUOGT5HTB26DHT89EUFD54";
+
 // การกำหนดค่าการเชื่อมต่อฐานข้อมูล SQL Server
 const config = {
   user: "sa",
@@ -23,6 +26,21 @@ const config = {
     instancename: "",
   },
 };
+const checkToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token === tokenCheck) {
+    return res.status(401).json({ error: "Unauthorized - Missing Token" });
+  }
+  const [bearer, receivedToken] = token.split(" ");
+
+  if (bearer !== "Bearer" || !receivedToken) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized - Invalid Token Format" });
+  }
+
+  next();
+};
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -35,7 +53,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/ICD", (req, res) => {
+app.get("/api/ICD", checkToken, (req, res) => {
   const networkFilePath = "./js/ICDMaster.json";
   try {
     const data = fs.readFileSync(networkFilePath, "utf-8");
@@ -46,7 +64,7 @@ app.get("/api/ICD", (req, res) => {
   }
 });
 
-app.get("/api/ICD/search", (req, res) => {
+app.get("/api/ICD/search", checkToken, (req, res) => {
   const { query } = req.query;
   const networkFilePath = "./js/ICDMaster.json";
   try {
@@ -64,7 +82,7 @@ app.get("/api/ICD/search", (req, res) => {
     res.status(500).json({ error: "Failed to read ICD data" });
   }
 });
-app.get("/api/ICDOperation/search", (req, res) => {
+app.get("/api/ICDOperation/search", checkToken, (req, res) => {
   const { query } = req.query;
   const networkFilePath = "./js/ICDOperation.json";
   try {
@@ -84,7 +102,7 @@ app.get("/api/ICDOperation/search", (req, res) => {
     res.status(500).json({ error: "Failed to read ICD data" });
   }
 });
-app.get("/api/medication/search", (req, res) => {
+app.get("/api/medication/search", checkToken, (req, res) => {
   const { query } = req.query;
   const networkFilePath = "./js/StockMaster.json";
 
@@ -106,7 +124,7 @@ app.get("/api/medication/search", (req, res) => {
     res.status(500).json({ error: "Failed to read ICD data" });
   }
 });
-app.get("/api/dose/search", (req, res) => {
+app.get("/api/dose/search", checkToken, (req, res) => {
   const { query } = req.query;
   const networkFilePath = "./js/DoseCode.json";
 
@@ -130,21 +148,38 @@ app.get("/api/dose/search", (req, res) => {
   }
 });
 
-app.get("/api/Patient/search", (req, res) => {
-  const { idCardNumber } = req.query;
-  const networkFilePath = "./js/PatientSCList.json";
+app.get("/api/Patient/search", checkToken, async (req, res) => {
+  const { idCardNumber, station } = req.query;
+
+  if (!station) {
+    return res.status(400).json({ error: "กรุณาเลือกคลินิกก่อน" });
+  }
+
+  console.log("idCardNumber:", idCardNumber, "station:", station);
+
   try {
-    const data = fs.readFileSync(networkFilePath, "utf-8");
-    const jsonData = JSON.parse(data);
-    const filteredData = jsonData.filter((item) =>
-      item.IDCard.includes(idCardNumber)
-    );
-    res.json(filteredData);
+    await sql.connect(config);
+
+    const query = `SELECT * FROM Patients WHERE CardID = '${idCardNumber}' AND HN LIKE '${station}%'`;
+    console.log("Executing query:", query);
+
+    const result = await sql.query(query);
+
+    console.log("Query result:", result.recordset);
+
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).json({ error: "ไม่พบข้อมูลคนไข้ในระบบ" });
+    }
   } catch (error) {
-    res.status(500).json({ error: "Failed to read ICD data" });
+    res.status(500).json({ error: "Failed to fetch patient data" });
+  } finally {
+    await sql.close();
   }
 });
-app.get("/api/InvNo", async (req, res) => {
+
+app.get("/api/InvNo", checkToken, async (req, res) => {
   try {
     const { station } = req.query;
     if (!station) {
@@ -167,7 +202,7 @@ app.get("/api/InvNo", async (req, res) => {
   }
 });
 
-app.post("/api/billTrans", async (req, res) => {
+app.post("/api/billTrans", checkToken, async (req, res) => {
   const {
     Station,
     Serv_date,
@@ -218,7 +253,7 @@ app.post("/api/billTrans", async (req, res) => {
   }
 });
 
-app.post("/api/medications", async (req, res) => {
+app.post("/api/medications", checkToken, async (req, res) => {
   const medications = req.body.medications;
   // console.log(medications);
   try {
@@ -292,7 +327,7 @@ app.post("/api/medications", async (req, res) => {
   }
 });
 
-app.post("/api/diagnosis", async (req, res) => {
+app.post("/api/diagnosis", checkToken, async (req, res) => {
   const diagnosis = req.body.diagnosis;
 
   try {
@@ -327,7 +362,7 @@ app.post("/api/diagnosis", async (req, res) => {
   }
 });
 
-app.get("/api/BillTransXML", async (req, res) => {
+app.get("/api/BillTransXML", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate, P_TFlag } = req.query;
 
   try {
@@ -375,7 +410,7 @@ app.get("/api/BillTransXML", async (req, res) => {
   }
 });
 
-app.get("/api/BillItems", async (req, res) => {
+app.get("/api/BillItems", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate, P_TFlag } = req.query;
 
   try {
@@ -419,7 +454,7 @@ app.get("/api/BillItems", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-app.get("/api/Dispensing", async (req, res) => {
+app.get("/api/Dispensing", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate } = req.query;
 
   try {
@@ -467,7 +502,7 @@ app.get("/api/Dispensing", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-app.get("/api/DispensedItems", async (req, res) => {
+app.get("/api/DispensedItems", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate } = req.query;
 
   try {
@@ -512,7 +547,7 @@ app.get("/api/DispensedItems", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-app.get("/api/OPServices", async (req, res) => {
+app.get("/api/OPServices", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate } = req.query;
 
   try {
@@ -558,7 +593,7 @@ app.get("/api/OPServices", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-app.get("/api/OPDx", async (req, res) => {
+app.get("/api/OPDx", checkToken, async (req, res) => {
   const { P_FromDate, P_ToDate } = req.query;
 
   try {
@@ -587,6 +622,51 @@ app.get("/api/OPDx", async (req, res) => {
   } catch (err) {
     console.error("SQL error", err);
     res.status(500).send("Server error");
+  }
+});
+
+app.get("/api/current-hn", checkToken, async (req, res) => {
+  try {
+    const { station } = req.query;
+    const pool = await sql.connect(config);
+    const request = pool.request();
+    const result = await request.query(
+      `SELECT MAX(HN) AS HN FROM Patients WHERE HN LIKE '${station}%'`
+    );
+    const currentHN = result.recordset.length ? result.recordset[0].HN : null;
+    res.status(200).send({ success: true, HN: currentHN });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ success: false, error: err.message });
+  }
+});
+
+app.post("/api/patients", checkToken, async (req, res) => {
+  const { HN, idCard, firstName, gender, birthDate, phone } = req.body;
+  try {
+    const pool = await sql.connect(config);
+    const request = pool.request();
+    await request.query(`INSERT INTO Patients (HN, CardID, FirstName, Gender, BirthDate, Phone)
+                           VALUES ('${HN}', '${idCard}', '${firstName}', '${gender}', '${birthDate}', '${phone}')`);
+    res.status(200).send({ success: true });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ success: false, error: err.message });
+  }
+});
+app.get("/api/check-id-card", checkToken, async (req, res) => {
+  try {
+    const { idCard, station } = req.query;
+    const pool = await sql.connect(config);
+    const request = pool.request();
+    const result = await request.query(
+      `SELECT COUNT(*) AS count FROM Patients WHERE CardID = '${idCard}' AND HN LIKE '${station}%'`
+    );
+    const exists = result.recordset[0].count > 0;
+    res.status(200).send({ exists });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ success: false, error: err.message });
   }
 });
 
